@@ -1,4 +1,6 @@
 .venv
+.env
 
+/__pycache__
 api/__pycache__
 api/resources/__pycache__
