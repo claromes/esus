@@ -1,13 +1,15 @@
-from flask import request, jsonify
+from flask import request
 from flask_restful import Resource
 
 from models.medical_care import MedicalCare
+from api.schemas.medical_care import MedicalCareSchema
 
 
 class MedicalCareList(Resource):
 
     def get(self):
         medical_care_query = MedicalCare.query
+        schema = MedicalCareSchema(many=True)
 
         date_filter = request.args.get("data_atendimento")
         health_condition_filter = request.args.get("condicao_saude")
@@ -38,4 +40,4 @@ class MedicalCareList(Resource):
 
         medical_care = medical_care_query.all()
 
-        return jsonify(results=medical_care)
+        return {"results": schema.dump(medical_care)}

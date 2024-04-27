@@ -1,4 +1,4 @@
-,ID,Nome,Nascimento,CNS,CPF,UNIDADE,data_atendimento,condicao_saude
+id,user_id,name,birthdate,national_health_card_number,cpf,unit,medical_care_date,health_condition
 0,1,Elisa Pinto,1978-04-05,75983412655,320.641.879-87,Unidade de saude Maria Alice,2023-08-10 10:43:39.216577,hipertensao
 1,1,Elisa Pinto,1978-04-05,75983412655,320.641.879-87,Unidade de saude Maria Alice,2023-12-19 03:18:47.561698,diabetes
 2,1,Elisa Pinto,1978-04-05,75983412655,320.641.879-87,Unidade de saude Maria Alice,2023-11-06 19:41:54.226493,diabetes

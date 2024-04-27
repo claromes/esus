@@ -1,3 +1,5 @@
+name: esus
+
 services:
   flask_esus:
     container_name: flask_esus
@@ -9,10 +11,10 @@ services:
       - DB_URL=${SQLALCHEMY_DATABASE_URI}
 
     depends_on:
-      - db
+      - postgres_esus
 
-  db:
-    container_name: db
+  postgres_esus:
+    container_name: postgres_esus
     image: postgres:15.3-alpine
     platform: linux/x86_64
     ports:
