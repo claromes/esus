@@ -9,12 +9,14 @@ from extensions import db
 class MedicalCareList(Resource):
 
     def get(self):
-        medical_care_query = MedicalCare.query
         schema = MedicalCareSchema(many=True)
+
+        medical_care_query = MedicalCare.query
 
         date_filter = request.args.get("data_atendimento")
         health_condition_filter = request.args.get("condicao_saude")
         unit_filter = request.args.get("unidade")
+        order_by = request.args.get("order_by")
 
         if date_filter:
             medical_care_query = medical_care_query.filter(
@@ -38,6 +40,10 @@ class MedicalCareList(Resource):
         if unit_filter:
             medical_care_query = medical_care_query.filter(
                 MedicalCare.unit == unit_filter)
+        if order_by:
+            for item in order_by.split(","):
+                attr = getattr(MedicalCare, item)
+                medical_care_query = medical_care_query.order_by(attr)
 
         medical_care = medical_care_query.all()
 
