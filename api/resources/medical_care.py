@@ -3,6 +3,7 @@ from flask_restful import Resource
 
 from models.medical_care import MedicalCare
 from api.schemas.medical_care import MedicalCareSchema
+from extensions import db
 
 
 class MedicalCareList(Resource):
@@ -41,3 +42,17 @@ class MedicalCareList(Resource):
         medical_care = medical_care_query.all()
 
         return {"results": schema.dump(medical_care)}
+
+    def post(self):
+        schema = MedicalCareSchema()
+        data = schema.load(request.json)
+
+        medical_care = MedicalCare(**data)
+
+        db.session.add(medical_care)
+        db.session.commit()
+
+        return {
+            "message": "Atendimento criado.",
+            "result": schema.dump(medical_care)
+        }
