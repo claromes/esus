@@ -62,3 +62,35 @@ class MedicalCareList(Resource):
             "message": "Atendimento criado.",
             "result": schema.dump(medical_care)
         }
+
+
+class MedicalCareItem(Resource):
+
+    def get(self, id):
+        schema = MedicalCareSchema()
+
+        medical_care = MedicalCare.query.get_or_404(id)
+
+        return {"Atendimento": schema.dump(medical_care)}
+
+    def put(self, id):
+        schema = MedicalCareSchema(partial=True)
+
+        medical_care = MedicalCare.query.get_or_404(id)
+        medical_care = schema.load(request.json, instance=medical_care)
+
+        db.session.add(medical_care)
+        db.session.commit()
+
+        return {
+            "message": "Atendimento atualizado.",
+            "Atendimento": schema.dump(medical_care)
+        }
+
+    def delete(self, id):
+        medical_care = MedicalCare.query.get_or_404(id)
+
+        db.session.delete(medical_care)
+        db.session.commit()
+
+        return {"message": "Atendimento deletado."}

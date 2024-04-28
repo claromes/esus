@@ -2,5 +2,5 @@
 .env
 
 /__pycache__
-api/__pycache__
-api/resources/__pycache__
+*/__pycache__
+*/*/__pycache__

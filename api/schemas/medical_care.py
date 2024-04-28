@@ -16,3 +16,4 @@ class MedicalCareSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = MedicalCare
+        load_instance = True
