@@ -51,7 +51,11 @@ Este endpoint retorna uma lista de todos os atendimentos registrados.
 **Exemplo**
 
 ```bash
-curl http://localhost:8001/api/v1/atendimentos?data_atendimento=2024-01-01&condicao_saude=diabetes&order_by=user_id,medical_care_date
+curl http://localhost:8001/api/v1/atendimentos?order_by=id
+```
+
+```bash
+curl http://localhost:8001/api/v1/atendimentos?unidade=Unidade%20de%20saude%20Maria%20Alice&condicao_saude=diabetes&order_by=user_id,medical_care_date
 ```
 
 ### Listar um atendimento específico
