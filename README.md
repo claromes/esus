@@ -1,12 +1,20 @@
 # e-SUS API REST ![A Flask Project](assets/flask-project.png "A Flask Project")
 
-Esta API REST fornece endpoints para gerenciar atendimentos médicos do sistema e-SUS. Você pode realizar operações CRUD para manipular os dados dos atendimentos.
+Esta API REST fornece endpoints para gerenciar atendimentos médicos do sistema e-SUS, permitindo listar, inserir, atualizar e deletar dados.
+
+É possível filtrar resultados por data de atendimento, condição de saúde do paciente e pela unidade de atendimento, além de ordenar os resultados. Os dados sensíveis dos pacientes (CPF e CNS) foram anonimizados.
+
+## Dados
+
+Os dados em CSV são inseridos no banco de dados usando a biblioteca `csvkit`.
+
+O header do arquivo CSV foi alterado para se adaptar ao banco de dados e a primeira coluna foi deletada, para que o ID de cada atendimento médico seja criado automaticamente.
 
 ## Stack
 
 **API**: Flask Framework
 
-**Extensões Flask**: Flask-RESTful, Flask-SQLAlchemy e Flask-Marshmallow
+**Extensões Flask**: Flask-RESTful, Flask-SQLAlchemy (Legacy Query Interface) e Flask-Marshmallow
 
 **Banco de Dados**: PostgreSQL
 
@@ -25,22 +33,26 @@ Esta API REST fornece endpoints para gerenciar atendimentos médicos do sistema 
 Este endpoint retorna uma lista de todos os atendimentos registrados.
 
 - Método: `GET`
-- URL: `http://localhost:8001/api/v1/atendimentos`
+- URL: `http://localhost:8001/api/v1/atendimentos?{query_params}`
 - Filtros:
+
+  Os filtros podem ser combinados entre si.
 
   - `data_atendimento` (str): Formato 'YYYY-mm-dd'.
   - `condicao_saude` (str): hipertensao|diabetes|ferida vascular|dengue|tuberculose.
   - `unidade` (str)
 
-  **Os filtros podem ser combinados entre si.**
-
 - Ordenação:
 
-  - `order_by` (str): name|birthdate|unit|medical_care_date|health_condition
+  A ordenação pode ser feita com multiplas opções separadas por vírgula.
+
+  - `order_by` (str): id, user_id, name, birthdate, unit, medical_care_date, health_condition
 
 **Exemplo**
 
-`http://localhost:8001/api/v1/atendimentos?data_atendimento=2024-01-01&condicao_saude=diabetes&order_by=birthdate`
+```bash
+curl http://localhost:8001/api/v1/atendimentos?data_atendimento=2024-01-01&condicao_saude=diabetes&order_by=user_id,medical_care_date`
+```
 
 ### Listar um atendimento específico
 
@@ -51,7 +63,9 @@ Este endpoint retorna os detalhes de um atendimento específico com base no seu 
 
 **Exemplo**
 
-`http://localhost:8001/api/v1/atendimentos/1`
+```bash
+curl http://localhost:8001/api/v1/atendimentos/1`
+```
 
 ### Criar um atendimento
 
@@ -60,7 +74,7 @@ Este endpoint cria um novo atendimento com base nos dados enviados.
 - Método: `POST`
 - URL: `http://localhost:8001/api/v1/atendimentos`
 
-**Exemplo de requisição:**
+**Exemplo**
 
 ```bash
 curl -X POST \
@@ -85,14 +99,14 @@ Este endpoint atualiza as informações de um atendimento específico com base n
 - Método: `PATCH`
 - URL: `http://localhost:8001/api/v1/atendimentos/{id}`
 
-**Exemplo de requisição:**
+**Exemplo**
 
 ```bash
 curl -X PATCH \
- http://127.0.0.1:8001/api/v1/atendimentos/3 \
+ http://127.0.0.1:8001/api/v1/atendimentos/1 \
  -H 'Content-Type: application/json' \
  -d '{
-"name": "John Doe"
+"name": "John D."
 }'
 ```
 
@@ -103,7 +117,7 @@ Este endpoint exclui um atendimento específico com base no seu ID.
 - Método: `DELETE`
 - URL: `http://localhost:8001/api/v1/atendimentos/{id}`
 
-**Exemplo de requisição:**
+**Exemplo**
 
 ```bash
 curl -X DELETE http://127.0.0.1:8001/api/v1/atendimentos/1
@@ -172,13 +186,6 @@ curl -X DELETE http://127.0.0.1:8001/api/v1/atendimentos/1
    ```bash
    csvsql --db postgresql://postgres:postgres@localhost:5432/postgres --tables medical_care --insert --no-create atendimentos.csv
    ```
-
-## Roadmap
-
-- [ ] Deploy
-- [ ] Caching
-- [ ] Autenticação
-- [ ] Testes
 
 ## Créditos
 
