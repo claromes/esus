@@ -1,32 +1,185 @@
-# e-SUS API REST
+# e-SUS API REST ![A Flask Project](assets/flask-project.png "A Flask Project")
 
-docker compose up -d postgres_esus
+Esta API REST fornece endpoints para gerenciar atendimentos médicos do sistema e-SUS. Você pode realizar operações CRUD para manipular os dados dos atendimentos.
 
-docker compose build
+## Stack
 
-docker compose up flask_esus
+**API**: Flask Framework
 
-csvsql --db postgresql://postgres:postgres@localhost:5432/postgres --tables medical_care --insert --no-create atendimentos.csv
+**Extensões Flask**: Flask-RESTful, Flask-SQLAlchemy e Flask-Marshmallow
 
+**Banco de Dados**: PostgreSQL
+
+**ORM**: SQLAlchemy
+
+**Schema**: marshmallow
+
+**Containerização**: Docker
+
+**Utilitário**: csvkit
+
+## Endpoints
+
+### Listar todos os atendimentos
+
+Este endpoint retorna uma lista de todos os atendimentos registrados.
+
+- Método: `GET`
+- URL: `http://localhost:8001/api/v1/atendimentos`
+- Filtros:
+
+  - `data_atendimento` (str): Formato 'YYYY-mm-dd'.
+  - `condicao_saude` (str): hipertensao|diabetes|ferida vascular|dengue|tuberculose.
+  - `unidade` (str)
+
+  **Os filtros podem ser combinados entre si.**
+
+- Ordenação:
+
+  - `order_by` (str): name|birthdate|unit|medical_care_date|health_condition
+
+**Exemplo**
+
+`http://localhost:8001/api/v1/atendimentos?data_atendimento=2024-01-01&condicao_saude=diabetes&order_by=birthdate`
+
+### Listar um atendimento específico
+
+Este endpoint retorna os detalhes de um atendimento específico com base no seu ID.
+
+- Método: `GET`
+- URL: `http://localhost:8001/api/v1/atendimentos/{id}`
+
+**Exemplo**
+
+`http://localhost:8001/api/v1/atendimentos/1`
+
+### Criar um atendimento
+
+Este endpoint cria um novo atendimento com base nos dados enviados.
+
+- Método: `POST`
+- URL: `http://localhost:8001/api/v1/atendimentos`
+
+**Exemplo de requisição:**
+
+```bash
 curl -X POST \
  http://127.0.0.1:8001/api/v1/atendimentos \
  -H 'Content-Type: application/json' \
  -d '{
-"user_id": 1285,
-"name": "AA5 User 2",
-"birthdate": "1997-01-01",
-"national_health_card_number": 12112289,
-"cpf": "123.333.229-00",
+"user_id": 123,
+"name": "John Doe",
+"birthdate": "2000-01-01",
+"national_health_card_number": 123456789,
+"cpf": "123.456.789-10",
 "unit": "Unidade 1",
 "medical_care_date": "2024-04-28",
-"health_condition": "diabetes"
+"health_condition": "dengue"
 }'
+```
 
-curl -X PUT \
- http://127.0.0.1:8001/api/v1/atendimentos/9337 \
+### Atualizar um atendimento
+
+Este endpoint atualiza as informações de um atendimento específico com base no seu ID.
+
+- Método: `PATCH`
+- URL: `http://localhost:8001/api/v1/atendimentos/{id}`
+
+**Exemplo de requisição:**
+
+```bash
+curl -X PATCH \
+ http://127.0.0.1:8001/api/v1/atendimentos/3 \
  -H 'Content-Type: application/json' \
  -d '{
-"name": "AA5 User 555"
+"name": "John Doe"
 }'
+```
 
-curl -X DELETE http://127.0.0.1:8001/api/v1/atendimentos/93
+### Deletar um atendimento
+
+Este endpoint exclui um atendimento específico com base no seu ID.
+
+- Método: `DELETE`
+- URL: `http://localhost:8001/api/v1/atendimentos/{id}`
+
+**Exemplo de requisição:**
+
+```bash
+curl -X DELETE http://127.0.0.1:8001/api/v1/atendimentos/1
+```
+
+## Desenvolvimento
+
+### Pré-requisitos
+
+- Python 3.8 ou superior
+- Docker Compose
+
+### Configuração do Ambiente
+
+1. Clone o repositório:
+
+   ```bash
+   git clone git@github.com:claromes/esus.git
+   ```
+
+2. Acesse o diretório do projeto:
+
+   ```bash
+   cd esus
+   ```
+
+3. Crie um ambiente virtual de Python:
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   ```bash
+   source .venv/bin/activate
+   ```
+
+4. Copie o arquivo `.env.example` e crie um arquivo `.env`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Executando a Aplicação
+
+1. Inicie o banco de dados PostgreSQL:
+
+   ```bash
+   docker compose up -d postgres_esus
+   ```
+
+2. Construa e inicie o servidor Flask:
+
+   ```bash
+   docker compose up --build flask_esus
+   ```
+
+3. Importe os dados iniciais para o banco de dados:
+
+   Altere o hostname do banco de dados caso necessário.
+
+   ```bash
+   csvsql --db postgresql://postgres:postgres@localhost:5432/postgres --tables medical_care --insert --no-create atendimentos.csv
+   ```
+
+## Roadmap
+
+- [ ] Deploy
+- [ ] Caching
+- [ ] Autenticação
+- [ ] Testes
+
+## Créditos
+
+[Clarissa Mendes](https://claromes.com)

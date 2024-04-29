@@ -17,3 +17,4 @@ class MedicalCareSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = MedicalCare
         load_instance = True
+        exclude = ["national_health_card_number", "cpf"]
