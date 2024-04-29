@@ -51,9 +51,17 @@ class MedicalCareList(Resource):
 
     def post(self):
         schema = MedicalCareSchema()
-        data = schema.load(request.json)
 
-        medical_care = MedicalCare(**data)
+        medical_care = MedicalCare(
+            user_id=request.json["user_id"],
+            name=request.json["name"],
+            birthdate=request.json["birthdate"],
+            national_health_card_number=request.
+            json["national_health_card_number"],
+            cpf=request.json["cpf"],
+            unit=request.json["unit"],
+            medical_care_date=request.json["medical_care_date"],
+            health_condition=request.json["health_condition"])
 
         db.session.add(medical_care)
         db.session.commit()
@@ -73,7 +81,7 @@ class MedicalCareItem(Resource):
 
         return {"Atendimento": schema.dump(medical_care)}
 
-    def put(self, id):
+    def patch(self, id):
         schema = MedicalCareSchema(partial=True)
 
         medical_care = MedicalCare.query.get_or_404(id)
